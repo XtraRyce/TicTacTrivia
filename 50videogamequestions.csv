@@ -1,0 +1,51 @@
+category,type,difficulty,question,correct_answer,incorrect_answers/0,incorrect_answers/1,incorrect_answers/2
+Entertainment: Video Games,multiple,easy,Which Greek letter represents the &quot;Half-Life&quot; logo?,Lambda,Omega,Alpha,Sigma
+Entertainment: Video Games,multiple,medium,What was the game &quot;Galaga&quot; was a sequel to?,Galaxian,Galactica,Space Invaders,Galactic Wars
+Entertainment: Video Games,boolean,easy,"The name of the main character of the video game &quot;The Legend of Zelda&quot;, is Zelda.",False,True,,
+Entertainment: Video Games,multiple,easy,The most graphically violent game to precede the creation of the ESRB (Entertainment Software Rating Board) was...,Mortal Kombat,Duke Nukem,Resident Evil,Doom
+Entertainment: Video Games,multiple,easy,Who is Sonic&#039;s sidekick?,Tails,Shadow,Amy,Knuckles
+Entertainment: Video Games,multiple,medium,In what engine was Titanfall made in?,Source Engine,Frostbite 3,Unreal Engine,Cryengine
+Entertainment: Video Games,multiple,hard,Which one of the following titles by Valve is not based on a Community Mod?,Ricochet,Day of Defeat,Counter-Strike,Alien Swarm
+Entertainment: Video Games,multiple,medium,In which country&#039;s version of Half-Life are the HECU Marines replaced with robots?,Germany,Japan,China,France
+Entertainment: Video Games,multiple,medium,"In Portal 2, the iconic character GLaDOS is turned into:",A potato,A tomato,A lemon,An apple
+Entertainment: Video Games,multiple,medium,"Excluding their instructor, how many members of Class VII are there in the game &quot;Legend of Heroes: Trails of Cold Steel&quot;?",9,6,10,3
+Entertainment: Video Games,boolean,medium,The Ace Attorney trilogy was suppose to end with &quot;Phoenix Wright: Ace Attorney &minus; Trials and Tribulations&quot; as its final game.,True,False,,
+Entertainment: Video Games,multiple,medium,What is the final game of the &quot;Zero Escape&quot; series called?,Zero Escape Zero Time Dilemma ,"Nine Hours, Nine Persons, Nine Doors ",Zero Escape Virtue&#039;s Last Reward,The Nonary Game: Sigma&#039;s Last Life
+Entertainment: Video Games,multiple,medium,In &quot;Clash Royale&quot; what is Arena 4 called?,P.E.K.K.A&#039;s Playhouse,Barbarian Bowl,Spell Valley,Royal Arena
+Entertainment: Video Games,multiple,medium,"Which of these weapons is NOT available to the Terrorist team in the game, &quot;Counter-Strike: Global Offensive&quot;?",SCAR-20,SG 550,CZ-75,XM1014
+Entertainment: Video Games,multiple,easy,Pok&eacute;mon Go is a location-based augmented reality game developed and published by which company?,Niantic,Rovio,Zynga,Supercell
+Entertainment: Video Games,multiple,medium,What is the name of the final boss in Turok: Dinosaur Hunter?,The Campaigner,The Primagen,Oblivion,Lord Tyrannus
+Entertainment: Video Games,multiple,medium,When was &quot;Garry&#039;s Mod&quot; released?,"December 24, 2004","November 13, 2004","December 13, 2004","November 12, 2004"
+Entertainment: Video Games,multiple,easy,Which of these Starbound races has a Wild West culture?,Novakid,Avian,Human,Hylotl
+Entertainment: Video Games,multiple,medium,What two characters from the game Undertale are never in a relationship or not related?,Frisk &amp; Chara,Sans &amp; Papyrus,Toriel &amp; Asgore,Alphys &amp; Undyne
+Entertainment: Video Games,multiple,hard,What device allows Tracer to manipulate her own time in the game &quot;Overwatch&quot;?,Chronal Accelerator,B.L.I.N.K,Spacial Displacement Manipulator,TMD (Time Manipulation Device)
+Entertainment: Video Games,multiple,easy,When was Minecraft first released to the public?,"May 17th, 2009","September 17th, 2009","November 18th, 2011","October 7th, 2011"
+Entertainment: Video Games,multiple,medium,By how many minutes are you late to work in &quot;Half-Life&quot;?,30,5,60,15
+Entertainment: Video Games,boolean,easy,"Gordon Freeman, the protagonist of &quot;Half-Life&quot;, is said to have once had a ponytail.",True,False,,
+Entertainment: Video Games,multiple,easy,Which of these characters is the mascot of the video game company SEGA?,Sonic the Hedgehog,Dynamite Headdy,Alex Kidd,Opa-Opa
+Entertainment: Video Games,multiple,hard,"Before Super Smash Bros. contained Nintendo characters, what was it known as internally?",Dragon King: The Fighting Game,Contest of Champions,Smash and Pummel,Fighter of the Ages: Conquest
+Entertainment: Video Games,multiple,medium,In what year were achivements added to Steam?,2007,2008,2009,2006
+Entertainment: Video Games,multiple,medium,"In Need For Speed Most Wanted (2005), what do you drive at the beginning of the career mode?",BMW M3 GTR,Porsche 911 Turbo,Nissan 240SX,Ford Mustang
+Entertainment: Video Games,multiple,easy,The Touhou Project series of games is often associated with which genre?,Shoot &#039;em up,Strategy,FPS,Casual
+Entertainment: Video Games,multiple,medium,Which of these is NOT a faction included in the game Counter-Strike: Global Offensive?,BOPE,GSG-9,Elite Crew,Phoenix Connexion
+Entertainment: Video Games,multiple,medium,What type of genre is the controversial 2015 game &quot;Hatred&quot;?,Shoot &#039;Em Up,Point &amp; Click,MMORPG,Simulation
+Entertainment: Video Games,multiple,easy,"In Need for Speed: Most Wanted (2005), what was the name of the main antagonist?",Clarence &quot;Razor&quot; Callahan,Hector &quot;Ming&quot; Domingo,Toru &quot;Bull&quot; Sato,Karl &quot;Baron&quot; Smit
+Entertainment: Video Games,multiple,easy,"In the game Battleblock Theater, what was the name of the voice actor who voiced the narrator?",Will Stamper,Steve Blum,Richard Epcar,Yuri Lowenthal
+Entertainment: Video Games,multiple,medium,"In the Halo series, what fleet was Thel &#039;Vadam supreme commander of before being branded an Arbiter?",Fleet of Particular Justice,Fleet of Sacred Consecration,Fleet of Furious Redemption,Fleet of Righteous Vigilance
+Entertainment: Video Games,boolean,easy,The end credits sequence in Grand Theft Auto 5 is over half an hour long.,True,False,,
+Entertainment: Video Games,multiple,easy,The name of the Metroid series comes from what?,An enemy in the game,The final boss&#039;s name,The main character&#039;s name,A spaceship&#039;s name
+Entertainment: Video Games,multiple,hard,"Which character, in the game &quot;Morenatsu&quot;, has the most possible endings to their route, at a total of four different endings?",Shin Kuroi,Kouya Aotsuki,Soutarou Touno,Torahiko Ooshima
+Entertainment: Video Games,multiple,hard,"In the game Danganronpa: Happy Trigger Havoc, the character Aoi Asahina&#039;s ultimate ability is what?",Ultimate Swimmer,Ultimate Detective,Ultimate Gambler,Ultimate Dancer
+Entertainment: Video Games,multiple,medium,Which survivor in Left 4 Dead sacrificed themself to save the other survivors?,Bill,Louis,Francis,Zoey
+Entertainment: Video Games,multiple,medium,The default playermodel of Garry&#039;s Mod is this Half Life 2 character.,Isaac Kleiner,G-Man,Alyx Vance,Gordon Freeman
+Entertainment: Video Games,multiple,easy,Which Animal Crossing game was for the Nintendo Wii?,Animal Crossing: City Folk,Animal Crossing: New Leaf,Animal Crossing: Wild World,Animal Crossing: Population Growing!
+Entertainment: Video Games,multiple,medium,"In The Elder Scrolls V: Skyrim, who is the jester in the dark brotherhood?",Cicero,Lucien Lachance,Archimedes,Astrid
+Entertainment: Video Games,boolean,easy,"In RuneScape, one must complete the &quot;Dragon Slayer&quot; quest before equipping Rune Platelegs.",False,True,,
+Entertainment: Video Games,multiple,medium,In what year was &quot;Super Mario Sunshine&quot; released?,2002,2003,2000,2004
+Entertainment: Video Games,multiple,easy,Which franchise was NOT featured in the 2015 video game &quot;Lego Dimensions&quot;?,Breaking Bad,Portal,Doctor Who,Back to the Future
+Entertainment: Video Games,multiple,medium,Which of these operators from &quot;Tom Clancy&#039;s Rainbow Six Siege&quot; has the ability to damage reinforced walls?,Jordan &quot;Thermite&quot; Trace,Eliza &quot;Ash&quot; Cohen,Seamus &quot;Sledge&quot; Cowden,Dominic &quot;Bandit&quot; Brunsmeier
+Entertainment: Video Games,multiple,hard,Which team won the &quot;Tom Clancy&#039;s Rainbow Six Siege&quot; Invitational Event February 2017 in the PC Category?,Continuum,GIFU,Santos Dexterity,eRa Eternity
+Entertainment: Video Games,multiple,medium,What was the first Weapon Pack for Payday 2?,The Gage Weapon Pack #1,The Overkill Pack,The Gage Chivalry Pack,The Gage Historical Pack
+Entertainment: Video Games,multiple,easy,What video game engine does the videogame Quake 2 run in?,iD Tech 2,iD Tech 3,iD Tech 1,Unreal Engine
+Entertainment: Video Games,multiple,medium,Which of these stages is not playable in &quot;Super Smash Bros. for Wii U&quot;?,Fountain of Dreams,Bridge of Eldin,75m,Miiverse
+Entertainment: Video Games,multiple,medium,When was &quot;System Shock&quot; released?,1994,1995,2000,1998
