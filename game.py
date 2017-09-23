@@ -12,6 +12,8 @@ for row in vg:
 
 pygame.init()
 
+FPS = 60
+
 white = (255, 255, 255)
 black = (0, 0, 0)
 red = (155, 0, 0)
@@ -31,6 +33,10 @@ clock = pygame.time.Clock()
 smallfont = pygame.font.SysFont("tahoma", 25)
 medfont = pygame.font.SysFont("tahoma", 50)
 largefont = pygame.font.SysFont("tahoma", 80)
+
+def quitgame():
+    pygame.quit()
+    quit()
 
 def text_objects(text, color, size):
     if size == "small":
@@ -68,12 +74,14 @@ def get_cell(cell):
         maxY = cell_height * 3
     return (minX, maxX, minY, maxY)
 
-def cell_button(text, cell, fc, fs, ac, ic):
+def cell_button(text, cell, fc, fs, ac, ic, action=None):
     mouse = pygame.mouse.get_pos()
+    click = pygame.mouse.get_pressed()
     bounds = get_cell(cell)
-    print(bounds)
     if bounds[1] >= mouse[0] >= bounds[0] and bounds[3] >= mouse[1] >= bounds[2]:
         screen.fill(ac, rect=[bounds[0], bounds[2], cell_width, cell_height])
+        if click[0] == 1 and action != None:
+            action()
     else:
         screen.fill(ic, rect=[bounds[0], bounds[2], cell_width, cell_height])
     message_to_screen(text, fc, cell, fs)
@@ -94,17 +102,11 @@ def GameLoop():
             cell_button("New Game", 4, white, "medium", bright_red, red)
             cell_button("Demo", 5, white, "medium", bright_red, red)
             cell_button("Options", 6, white, "medium", bright_red, red)
-            cell_button("Quit", 8, white, "medium", bright_red, red)
+            cell_button("Quit", 8, white, "medium", bright_red, red, quitgame)
 
             print(event)
 
 
-            if event.type == pygame.MOUSEBUTTONUP:
-                pos = pygame.mouse.get_pos()
-                if quitBounds[1] >= pos[0] >= quitBounds[0] and quitBounds[3] >= pos[1] >= quitBounds[2]:
-                # if pos[0] >= quitBounds[0] and pos[0] <= quitBounds[1]:
-                #     if pos[1] >= quitBounds[2] and pos[1] <= quitBounds[3]:
-                        gameExit = True
             if event.type == pygame.QUIT:
                 gameExit = True
 
@@ -134,7 +136,7 @@ def GameLoop():
 
         pygame.display.update()
 
-        clock.tick(60)
+        clock.tick(FPS)
 
     pygame.quit()
     quit()
