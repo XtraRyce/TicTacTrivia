@@ -5,12 +5,16 @@ anime = csv.DictReader(open('50animequestions.csv', encoding="utf8"))
 vg = csv.DictReader(open('50videogamequestions.csv', encoding="utf8"))
 myDict = []
 for row in anime:
-    # print(row)
     myDict.append(row)
 for row in vg:
     myDict.append(row)
+for row in myDict:
+    print(row)
+
 
 pygame.init()
+
+go_back = 0
 
 FPS = 60
 
@@ -18,6 +22,7 @@ white = (255, 255, 255)
 black = (0, 0, 0)
 red = (155, 0, 0)
 green = (0, 155 ,0)
+bright_green = (0, 255, 0)
 bright_red = (255,0, 0)
 
 display_width = 1280
@@ -38,13 +43,17 @@ def quitgame():
     pygame.quit()
     quit()
 
+def goback():
+    global go_back
+    go_back = 1
+
 def text_objects(text, color, size):
     if size == "small":
         textSurface = smallfont.render(text, True, color)
     elif size == "medium":
         textSurface = medfont.render(text, True, color)
     elif size == "large":
-            textSurface = largefont.render(text, True, color)
+        textSurface = largefont.render(text, True, color)
     return textSurface, textSurface.get_rect()
 
 
@@ -82,33 +91,33 @@ def cell_button(text, cell, fc, fs, ac, ic, action=None):
         screen.fill(ac, rect=[bounds[0], bounds[2], cell_width, cell_height])
         if click[0] == 1 and action != None:
             action()
+        # elif click[0] == 1 and action != "goback":
+        #     go_back = 1
     else:
         screen.fill(ic, rect=[bounds[0], bounds[2], cell_width, cell_height])
     message_to_screen(text, fc, cell, fs)
 
-
-def GameLoop():
+def MainMenu():
     # gameOver = False
-    gameExit = False
+    gameExit = True
 
 
-    while not gameExit:
+    while gameExit:
         for event in pygame.event.get():
-            screen.fill(white)
-            message_to_screen("TIC", black, 1, size="large")
-            message_to_screen("TAC", black, 2, size="large")
-            message_to_screen("TRIVIA", black, 3, size="large")
-
-            cell_button("New Game", 4, white, "medium", bright_red, red)
-            cell_button("Demo", 5, white, "medium", bright_red, red)
-            cell_button("Options", 6, white, "medium", bright_red, red)
-            cell_button("Quit", 8, white, "medium", bright_red, red, quitgame)
-
-            print(event)
-
-
             if event.type == pygame.QUIT:
-                gameExit = True
+                pygame.quit()
+                quit()
+        screen.fill(white)
+        message_to_screen("TIC", black, 1, size="large")
+        message_to_screen("TAC", black, 2, size="large")
+        message_to_screen("TRIVIA", black, 3, size="large")
+
+        cell_button("New Game", 4, white, "medium", bright_red, red, gamescreen)
+        cell_button("Demo", 5, white, "medium", bright_red, red)
+        cell_button("Options", 6, white, "medium", bright_red, red)
+        cell_button("Quit", 8, white, "medium", bright_red, red, quitgame)
+
+        print(event)
 
 
 
@@ -141,4 +150,20 @@ def GameLoop():
     pygame.quit()
     quit()
 
-GameLoop()
+def gamescreen():
+    gameOver = False
+    global go_back
+    while not gameOver:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+        screen.fill(white)
+        cell_button("Back to Main Menu", 7, black, "medium", bright_red, red, goback)
+        if go_back == 1:
+            gameOver = True
+            go_back = 0
+        pygame.display.update()
+        clock.tick(FPS)
+
+MainMenu()
