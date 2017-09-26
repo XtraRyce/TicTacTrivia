@@ -241,6 +241,7 @@ def gamescreen():
                                 file.writelines('1\n')
                             else:
                                 file.writelines('0\n')
+
     while not gameOver:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
