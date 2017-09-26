@@ -171,6 +171,10 @@ def MainMenu():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    quit()
         screen.fill(white)
         message_to_screen("TIC", black, 1, size="large")
         message_to_screen("TAC", black, 2, size="large")
@@ -218,7 +222,7 @@ def gamescreen():
     gameOver = False
     # global go_back
     # global board_state, o_state, x_state
-    qindex = random.sample(range(1,100), 10)
+    qindex = random.sample(range(0,99), 10)
     print(qindex)
     for i,q in enumerate(qindex):
         print(i,q)
@@ -242,14 +246,26 @@ def gamescreen():
                     #             file.writelines('1\n')
                     #         else:
                     #             file.writelines('0\n')
-        print(dupecheck[q])
-    print(qindex)
-    for x,i in enumerate(dupecheck):
-        if i == 1:
-            print(x)
-    # with open('dupecheck.txt', 'a') as file:
-    #     for line in file:
-    #             file.write(str(line)+'\n')
+    #     print(dupecheck[q])
+    # print(qindex)
+    # for x,i in enumerate(dupecheck):
+    #     if i == 1:
+    #         print(x)
+
+    # with open('dupecheck.txt', 'w') as file:
+    #     for i,line in enumerate(file):
+    #         print(i)
+    #         file.write(str(dupecheck[i]))
+
+    with fileinput.FileInput('dupecheck.txt', inplace=True, backup='.bak') as file:
+        for i, line in enumerate(file):
+            if dupecheck[i] == 1:
+                print(line.replace('0', '1'), end='')
+            else:
+                print(line.replace('0', '0'), end='')
+
+
+
     while not gameOver:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
