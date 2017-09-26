@@ -229,33 +229,12 @@ def gamescreen():
         print(dupecheck[q])
         if dupecheck[q] == 0:
             dupecheck[q] = 1
-            # with open('dupecheck.txt', 'w') as file:
-            #     for line in file:
-            #         if line == q:
-            #             file.writelines('1\n')
-            #         else:
-            #             file.writelines('0\n')
         else:
             while dupecheck[q] != 1:
                 qindex[i] = random.randint(1, 100)
                 if dupecheck[q] == 0:
                     dupecheck[q] = 1
-                    # with open('dupecheck.txt', 'w') as file:
-                    #     for line in file:
-                    #         if line == q:
-                    #             file.writelines('1\n')
-                    #         else:
-                    #             file.writelines('0\n')
-    #     print(dupecheck[q])
-    # print(qindex)
-    # for x,i in enumerate(dupecheck):
-    #     if i == 1:
-    #         print(x)
 
-    # with open('dupecheck.txt', 'w') as file:
-    #     for i,line in enumerate(file):
-    #         print(i)
-    #         file.write(str(dupecheck[i]))
 
     with fileinput.FileInput('dupecheck.txt', inplace=True, backup='.bak') as file:
         for i, line in enumerate(file):
