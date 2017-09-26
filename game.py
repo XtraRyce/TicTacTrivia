@@ -1,5 +1,7 @@
 import pygame
 import csv
+import random
+import fileinput
 
 anime = csv.DictReader(open('50animequestions.csv', encoding="utf8"))
 vg = csv.DictReader(open('50videogamequestions.csv', encoding="utf8"))
@@ -11,10 +13,67 @@ for row in vg:
 for row in myDict:
     print(row)
 
+with open('dupecheck.txt') as file:
+    dupecheck = []
+    for line in file:
+        # print(line)
+        line = line.split()
+        if line:
+            line = [int(i) for i in line]
+            print(line)
+            dupecheck.extend(line)
+            # dupecheck.append(line)
+
+
+
+print(dupecheck)
+
 
 pygame.init()
 
 go_back = 0
+
+
+board_state = { 1: [-1, False],
+                2: [-1, False],
+                3: [-1, False],
+                4: [-1, False],
+                5: [-1, False],
+                6: [-1, False],
+                7: [-1, False],
+                8: [-1, False],
+                9: [-1, False] }
+                # [question index, is answered]
+
+o_state = [ False,
+              False,
+              False,
+              False,
+              False,
+              False,
+              False,
+              False,
+              False ]
+
+x_state = [ False,
+              False,
+              False,
+              False,
+              False,
+              False,
+              False,
+              False,
+              False ]
+
+win_conditions = [
+                [1, 2, 3],
+                [4, 5, 6],
+                [7, 8, 9],
+                [1, 5, 9],
+                [1, 4, 7],
+                [2, 5, 8],
+                [3, 6, 9],
+                [3, 5, 7]]
 
 FPS = 60
 
@@ -46,6 +105,15 @@ def quitgame():
 def goback():
     global go_back
     go_back = 1
+
+def question(index):
+    global board_state
+
+
+    # for i in board_state:
+    #     board_state[0] = random.randint(0,99
+    # screen.fill(white)
+    # cell_button("Yes", 4, black, "medium", white, white, )
 
 def text_objects(text, color, size):
     if size == "small":
@@ -91,8 +159,6 @@ def cell_button(text, cell, fc, fs, ac, ic, action=None):
         screen.fill(ac, rect=[bounds[0], bounds[2], cell_width, cell_height])
         if click[0] == 1 and action != None:
             action()
-        # elif click[0] == 1 and action != "goback":
-        #     go_back = 1
     else:
         screen.fill(ic, rect=[bounds[0], bounds[2], cell_width, cell_height])
     message_to_screen(text, fc, cell, fs)
@@ -152,17 +218,49 @@ def MainMenu():
 
 def gamescreen():
     gameOver = False
-    global go_back
+    # global go_back
+    # global board_state, o_state, x_state
+    qindex = random.sample(range(100), 10)
+    for q in qindex:
+        if dupecheck[q] == 0:
+            dupecheck[qindex[q]] = 1
+            with open('dupecheck.txt', 'w') as file:
+                for line in file:
+                    if line == q:
+                        file.writelines('1\n')
+                    else:
+                        file.writelines('0\n')
+        else:
+            while dupecheck[q]:
+                qindex[q] = random.randint(1, 100)
+                if dupecheck[q] == False:
+                    dupecheck[q] = True
+                    with open('dupecheck.txt', 'w') as file:
+                        for line in file:
+                            if line == q:
+                                file.writelines('1\n')
+                            else:
+                                file.writelines('0\n')
     while not gameOver:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    gameOver = True
         screen.fill(white)
-        cell_button("Back to Main Menu", 7, black, "medium", bright_red, red, goback)
-        if go_back == 1:
-            gameOver = True
-            go_back = 0
+        # for i in range(1,10):
+
+        # for i in board_state:
+        #     if board_state[0] == False:
+        #         cell_button("?", i, black, "large", white, white, question)
+        #     else
+
+        # cell_button("Back to Main Menu", 7, black, "medium", bright_red, red, goback)
+        # if go_back == 1:
+        #     gameOver = True
+        #     go_back = 0
         pygame.display.update()
         clock.tick(FPS)
 
