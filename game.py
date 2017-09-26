@@ -10,6 +10,7 @@ for row in anime:
     myDict.append(row)
 for row in vg:
     myDict.append(row)
+
 for row in myDict:
     print(row)
 
@@ -29,7 +30,7 @@ print(dupecheck)
 
 pygame.init()
 
-go_back = 0
+# go_back = False
 
 
 board_state = { 1: [-1, False],
@@ -41,7 +42,7 @@ board_state = { 1: [-1, False],
                 7: [-1, False],
                 8: [-1, False],
                 9: [-1, False] }
-                # [question index, is answered]
+                # cell: [question index, is answered]
 
 o_state = [ False,
               False,
@@ -73,6 +74,8 @@ win_conditions = [
                 [3, 6, 9],
                 [3, 5, 7]]
 
+ongoing = False
+
 FPS = 60
 
 white = (255, 255, 255)
@@ -81,6 +84,8 @@ red = (155, 0, 0)
 green = (0, 155 ,0)
 bright_green = (0, 255, 0)
 bright_red = (255,0, 0)
+team_o = (39, 167, 216)
+team_x = (255, 154, 0)
 
 display_width = 1280
 display_height = 720
@@ -100,18 +105,16 @@ def quitgame():
     pygame.quit()
     quit()
 
-def goback():
-    global go_back
-    go_back = 1
+# def goback():
+#     global go_back
+#     go_back = True
 
-def question(index):
-    global board_state
-
-
-    # for i in board_state:
-    #     board_state[0] = random.randint(0,99
-    # screen.fill(white)
-    # cell_button("Yes", 4, black, "medium", white, white, )
+def cell_pos(x,y):
+    for i in range(1,10):
+        temp = get_cell(i)
+        if temp[1] >= x >= temp[0] and temp[3] >= y >= temp[2]:
+            z = i
+    return z
 
 def text_objects(text, color, size):
     if size == "small":
@@ -180,12 +183,15 @@ def MainMenu():
         message_to_screen("TAC", black, 2, size="large")
         message_to_screen("TRIVIA", black, 3, size="large")
 
-        cell_button("New Game", 4, white, "medium", bright_red, red, gamescreen)
+        if ongoing == False:
+            cell_button("New Game", 4, white, "medium", bright_red, red, gamescreen)
+        else:
+            cell_button("Resume Game", 4, white, "medium", bright_red, red, gamescreen)
         cell_button("Demo", 5, white, "medium", bright_red, red)
         cell_button("Options", 6, white, "medium", bright_red, red)
         cell_button("Quit", 8, white, "medium", bright_red, red, quitgame)
 
-        print(event)
+        # print(event)
 
 
 
@@ -218,54 +224,101 @@ def MainMenu():
     pygame.quit()
     quit()
 
+qindex = random.sample(range(0,99), 9)
+
+
 def gamescreen():
     gameOver = False
-    # global go_back
-    # global board_state, o_state, x_state
-    qindex = random.sample(range(0,99), 10)
-    print(qindex)
-    for i,q in enumerate(qindex):
-        print(i,q)
-        print(dupecheck[q])
-        if dupecheck[q] == 0:
-            dupecheck[q] = 1
-        else:
-            while dupecheck[q] != 1:
-                qindex[i] = random.randint(1, 100)
-                if dupecheck[q] == 0:
-                    dupecheck[q] = 1
-
-
-    with fileinput.FileInput('dupecheck.txt', inplace=True, backup='.bak') as file:
-        for i, line in enumerate(file):
-            if dupecheck[i] == 1:
-                print(line.replace('0', '1'), end='')
+    global ongoing, qindex, board_state, turn
+    if ongoing == False:
+        print(qindex)
+        for i,q in enumerate(qindex):
+            print(i,q)
+            print(dupecheck[q])
+            if dupecheck[q] == 0:
+                dupecheck[q] = 1
             else:
-                print(line.replace('0', '0'), end='')
+                while dupecheck[q] != 1:
+                    qindex[i] = random.randint(1, 100)
+                    if dupecheck[q] == 0:
+                        dupecheck[q] = 1
+        # with fileinput.FileInput('dupecheck.txt', inplace=True, backup='.bak') as file:
+        #     for i, line in enumerate(file):
+        #         if dupecheck[i] == 1:
+        #             print(line.replace('0', '1'), end='')
+        #         else:
+        #             print(line.replace('0', '0'), end='')
 
+        for key, cell in board_state.items():
+            cell[0] = qindex[key-1]
+        ongoing = True
 
+    else:
+        print(qindex)
+        print(board_state)
+        while not gameOver:
+            current_pos = pygame.mouse.get_pos()
+            current_cell = cell_pos(current_pos[0], current_pos[1])
+            print(current_cell)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        gameOver = True
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    question(qindex[current_cell-1])
 
-    while not gameOver:
+            for key, cell in board_state.items():
+                if cell[1] == False:
+                    mouse = pygame.mouse.get_pos()
+                    bounds = get_cell(key)
+                    if bounds[1] >= mouse[0] >= bounds[0] and bounds[3] >= mouse[1] >= bounds[2]:
+                        screen.fill(bright_red, rect=[bounds[0], bounds[2], cell_width, cell_height])
+                    else:
+                        screen.fill(red, rect=[bounds[0], bounds[2], cell_width, cell_height])
+                    message_to_screen(myDict[qindex[key-1]]['difficulty'].capitalize(), white, key, "medium")
+
+            pygame.display.update()
+            clock.tick(FPS)
+            # else:
+
+            # for i in range(1,10):
+
+            # for i in board_state:
+            #     if board_state[0] == False:
+            #         cell_button("?", i, black, "large", white, white, question)
+            #     else
+
+            # cell_button("Back to Main Menu", 7, black, "medium", bright_red, red, goback)
+            # if go_back == 1:
+            #     gameOver = True
+            #     go_back = 0
+            # pygame.display.update()
+            # clock.tick(FPS)
+
+def question(index):
+    goBack = False
+    global board_state, x_state, o_state
+    while not goBack:
+        # print('nope')
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    gameOver = True
+                     goBack = True
         screen.fill(white)
-        # for i in range(1,10):
-
-        # for i in board_state:
-        #     if board_state[0] == False:
-        #         cell_button("?", i, black, "large", white, white, question)
-        #     else
-
-        # cell_button("Back to Main Menu", 7, black, "medium", bright_red, red, goback)
-        # if go_back == 1:
-        #     gameOver = True
-        #     go_back = 0
+        message_to_screen(str(index), black, 5, size="large")
         pygame.display.update()
         clock.tick(FPS)
+
+
+    # for i in board_state:
+    #     board_state[0] = random.randint(0,99
+    # screen.fill(white)
+    # cell_button("Yes", 4, black, "medium", white, white, )
 
 MainMenu()
