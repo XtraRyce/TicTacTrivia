@@ -13,16 +13,14 @@ for row in vg:
 for row in myDict:
     print(row)
 
+dupecheck = []
+
 with open('dupecheck.txt') as file:
-    dupecheck = []
     for line in file:
-        # print(line)
         line = line.split()
         if line:
             line = [int(i) for i in line]
-            print(line)
             dupecheck.extend(line)
-            # dupecheck.append(line)
 
 
 
@@ -220,28 +218,38 @@ def gamescreen():
     gameOver = False
     # global go_back
     # global board_state, o_state, x_state
-    qindex = random.sample(range(100), 10)
-    for q in qindex:
+    qindex = random.sample(range(1,100), 10)
+    print(qindex)
+    for i,q in enumerate(qindex):
+        print(i,q)
+        print(dupecheck[q])
         if dupecheck[q] == 0:
-            dupecheck[qindex[q]] = 1
-            with open('dupecheck.txt', 'w') as file:
-                for line in file:
-                    if line == q:
-                        file.writelines('1\n')
-                    else:
-                        file.writelines('0\n')
+            dupecheck[q] = 1
+            # with open('dupecheck.txt', 'w') as file:
+            #     for line in file:
+            #         if line == q:
+            #             file.writelines('1\n')
+            #         else:
+            #             file.writelines('0\n')
         else:
-            while dupecheck[q]:
-                qindex[q] = random.randint(1, 100)
-                if dupecheck[q] == False:
-                    dupecheck[q] = True
-                    with open('dupecheck.txt', 'w') as file:
-                        for line in file:
-                            if line == q:
-                                file.writelines('1\n')
-                            else:
-                                file.writelines('0\n')
-
+            while dupecheck[q] != 1:
+                qindex[i] = random.randint(1, 100)
+                if dupecheck[q] == 0:
+                    dupecheck[q] = 1
+                    # with open('dupecheck.txt', 'w') as file:
+                    #     for line in file:
+                    #         if line == q:
+                    #             file.writelines('1\n')
+                    #         else:
+                    #             file.writelines('0\n')
+        print(dupecheck[q])
+    print(qindex)
+    for x,i in enumerate(dupecheck):
+        if i == 1:
+            print(x)
+    # with open('dupecheck.txt', 'a') as file:
+    #     for line in file:
+    #             file.write(str(line)+'\n')
     while not gameOver:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
