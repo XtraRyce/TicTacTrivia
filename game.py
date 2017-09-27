@@ -268,7 +268,6 @@ def countdown():
     counter = 15
     loop = True
     while loop:
-        print(counter)
         if counter == 0:
             textSurf, textRect = text_objects("Time's up!", red, "large")
             textRect.center = ((display_width // 2), ((display_height // 8) * 7))
@@ -319,6 +318,7 @@ def result(cell, correct=None):
     pygame.display.flip()
     clock.tick(1)
     clock.tick(1)
+
     for cond in win_conditions:
         if set(cond).issubset(o_state):
             for i in range(0,3):
@@ -423,12 +423,13 @@ def gamescreen():
             cell[0] = qindex[key-1]
         ongoing = True
     else:
-        print(win_conditions)
-        print(turn)
-        print(o_state)
-        print(x_state)
+        gameOver = False
         transition = False
-        while not gameOver:
+        draw = 0
+        for i in board_state:
+            if board_state[i][1] == True:
+                draw += 1
+        while not gameOver and draw < 9:
             current_pos = pygame.mouse.get_pos()
             current_cell = cell_pos(current_pos[0], current_pos[1])
             screen.fill(white)
@@ -472,18 +473,63 @@ def gamescreen():
                         screen.fill(team_x, rect=[bounds[0], bounds[2], cell_width, cell_height])
                         message_to_screen("X", black, key, "large")
             if turn % 2 == 0:
-                textSurf, textRect = text_objects('O\'s Turn', team_o, "small")
+                textSurf, textRect = text_objects('O\'s Turn', black, "small")
                 textRect.bottom = display_height
                 screen.blit(textSurf, textRect)
-                pygame.display.flip()
+                pygame.display.update()
             elif turn % 2 == 1:
-                textSurf, textRect = text_objects('X\'s Turn', team_x, "small")
+                textSurf, textRect = text_objects('X\'s Turn', black, "small")
                 textRect.bottom = display_height
                 textRect.right = display_width
                 screen.blit(textSurf, textRect)
-                pygame.display.flip()
-            pygame.display.update()
+                pygame.display.update()
+        if draw == 9:
+            screen.fill(red)
+            pygame.display.flip()
+            clock.tick(1)
+            message_to_screen(":(", white, 0, "large")
+            pygame.display.flip()
+            clock.tick(1)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+                else:
+                    print(event)
+            screen.fill(red)
+            pygame.display.flip()
+            clock.tick(1)
+            message_to_screen("It\'s a stalemate", white, 0, "large", "top")
+            message_to_screen("No one won.", white, 0, "large", )
+            pygame.display.flip()
+            clock.tick(1)
+            while not gameOver:
+                current_pos = pygame.mouse.get_pos()
+
+                textSurf, textRect = text_objects("You all suck", white, "smaller")
+                textRect.bottom = display_height
+                textRect.center = (display_width / 2),(display_height - 20)
+                if textRect.right >= current_pos[0] >= textRect.left and textRect.bottom >= current_pos[1] >= textRect.top:
+                    screen.fill(bright_red, textRect)
+                else:
+                    screen.fill(red, textRect)
+                screen.blit(textSurf, textRect)
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        quit()
+                    elif event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_ESCAPE:
+                            ongoing = False
+                            MainMenu()
+                    elif event.type == pygame.MOUSEBUTTONDOWN:
+                        if textRect.right >= current_pos[0] >= textRect.left and textRect.bottom >= current_pos[1] >= textRect.top:
+                            ongoing = False
+                            gameOver = True
+                    pygame.display.update()
+            MainMenu()
             clock.tick(FPS)
+
 
 def question(index, cell):
     goBack = False
@@ -507,7 +553,7 @@ def question(index, cell):
                     if x.right >= current_pos[0] >= x.left and x.bottom >= current_pos[1] >= x.top:
                         if i == correct - 1:
                             result(cell, True)
-                        else:
+                        elif i != correct - 1:
                             result(cell, False)
         pygame.display.update()
         clock.tick(FPS)
