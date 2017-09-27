@@ -2,6 +2,7 @@ import pygame
 import csv
 import random
 import fileinput
+from itertools import chain
 
 anime = csv.DictReader(open('50animequestions.csv', encoding="utf8"))
 vg = csv.DictReader(open('50videogamequestions.csv', encoding="utf8"))
@@ -32,48 +33,6 @@ pygame.init()
 
 # go_back = False
 
-
-board_state = { 1: [-1, False],
-                2: [-1, False],
-                3: [-1, False],
-                4: [-1, False],
-                5: [-1, False],
-                6: [-1, False],
-                7: [-1, False],
-                8: [-1, False],
-                9: [-1, False] }
-                # cell: [question index, is answered]
-
-o_state = [ False,
-              False,
-              False,
-              False,
-              False,
-              False,
-              False,
-              False,
-              False ]
-
-x_state = [ False,
-              False,
-              False,
-              False,
-              False,
-              False,
-              False,
-              False,
-              False ]
-
-win_conditions = [
-                [1, 2, 3],
-                [4, 5, 6],
-                [7, 8, 9],
-                [1, 5, 9],
-                [1, 4, 7],
-                [2, 5, 8],
-                [3, 6, 9],
-                [3, 5, 7]]
-
 ongoing = False
 
 FPS = 60
@@ -97,6 +56,7 @@ pygame.display.set_caption('TicTacTrivia')
 
 clock = pygame.time.Clock()
 # smallfont = pygame.font.SysFont(None, 25)
+smallerfont = pygame.font.SysFont("tahoma", 18)
 smallfont = pygame.font.SysFont("tahoma", 25)
 medfont = pygame.font.SysFont("tahoma", 50)
 largefont = pygame.font.SysFont("tahoma", 80)
@@ -105,9 +65,102 @@ def quitgame():
     pygame.quit()
     quit()
 
-# def goback():
-#     global go_back
-#     go_back = True
+def initvalues():
+    global board_state, o_state, x_state, win_conditions, isShuffled, order
+    board_state = {1: [-1, False],
+                   2: [-1, False],
+                   3: [-1, False],
+                   4: [-1, False],
+                   5: [-1, False],
+                   6: [-1, False],
+                   7: [-1, False],
+                   8: [-1, False],
+                   9: [-1, False]}
+    o_state = [False,
+               False,
+               False,
+               False,
+               False,
+               False,
+               False,
+               False,
+               False]
+    x_state = [False,
+               False,
+               False,
+               False,
+               False,
+               False,
+               False,
+               False,
+               False]
+    win_conditions = [
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9],
+        [1, 5, 9],
+        [1, 4, 7],
+        [2, 5, 8],
+        [3, 6, 9],
+        [3, 5, 7]]
+    isShuffled = [False,
+                  False,
+                  False,
+                  False,
+                  False,
+                  False,
+                  False,
+                  False,
+                  False]
+    order = {1: [],
+             2: [],
+             3: [],
+             4: [],
+             5: [],
+             6: [],
+             7: [],
+             8: [],
+             9: []
+             }
+
+def truncline(text, font, maxwidth):
+    real = len(text)
+    stext = text
+    l = font.size(text)[0]
+    cut = 0
+    a = 0
+    done = 1
+    old = None
+    while l > maxwidth:
+        a = a + 1
+        n = text.rsplit(None, a)[0]
+        if stext == n:
+            cut += 1
+            stext = n[:-cut]
+        else:
+            stext = n
+        l = font.size(stext)[0]
+        real = len(stext)
+        done = 0
+    return real, done, stext
+
+
+def wrapline(text, font, maxwidth):
+    done = 0
+    wrapped = []
+
+    while not done:
+        nl, done, stext = truncline(text, font, maxwidth)
+        wrapped.append(stext.strip())
+        text = text[nl:]
+    return wrapped
+
+
+def wrap_multi_line(text, font, maxwidth):
+    """ returns text taking new lines into account.
+    """
+    lines = chain(*(wrapline(line, font, maxwidth) for line in text.splitlines()))
+    return list(lines)
 
 def cell_pos(x,y):
     for i in range(1,10):
@@ -117,7 +170,9 @@ def cell_pos(x,y):
     return z
 
 def text_objects(text, color, size):
-    if size == "small":
+    if size == "smaller":
+        textSurface = smallerfont.render(text, True, color)
+    elif size == "small":
         textSurface = smallfont.render(text, True, color)
     elif size == "medium":
         textSurface = medfont.render(text, True, color)
@@ -126,16 +181,36 @@ def text_objects(text, color, size):
     return textSurface, textSurface.get_rect()
 
 
-def message_to_screen(msg, color, cell, size = "small"):
+def message_to_screen(msg, color, cell, size = "small", y_align = "center"):
     textSurf, textRect = text_objects(msg, color, size)
     if cell is 0:
-        textRect.center = (display_width / 2), (display_height / 2)
+        if y_align == "center":
+            textRect.center = (display_width // 2), (display_height // 2)
+        elif y_align == "top":
+            textRect.center = (display_width // 2), (display_height // 3)
+        elif y_align == "bottom":
+            textRect.center = (display_width // 2), ((display_height // 3) * 2)
     elif cell <= 3 and cell >= 1:
-        textRect.center = (((cell_width * ((cell - 1) % 3)) + (cell_width / 2)), (cell_height / 2))
+        if y_align == "center":
+            textRect.center = ((cell_width * ((cell - 1) % 3)) + (cell_width // 2)), (cell_height // 2)
+        elif y_align == "top":
+            textRect.center = ((cell_width * ((cell - 1) % 3)) + (cell_width // 2)), (cell_height // 3)
+        elif y_align == "bottom":
+            textRect.center = ((cell_width * ((cell - 1) % 3)) + (cell_width // 2)), ((cell_height // 3) * 2)
     elif cell <= 6 and cell >= 4:
-        textRect.center = (((cell_width * ((cell - 1) % 3)) + (cell_width / 2)), (cell_height + (cell_height / 2)))
+        if y_align == "center":
+            textRect.center = ((cell_width * ((cell - 1) % 3)) + (cell_width // 2)), (cell_height + (cell_height // 2))
+        elif y_align == "top":
+            textRect.center = ((cell_width * ((cell - 1) % 3)) + (cell_width // 2)), (cell_height + (cell_height // 3))
+        elif y_align == "bottom":
+            textRect.center = ((cell_width * ((cell - 1) % 3)) + (cell_width // 2)), (cell_height + ((cell_height // 3) * 2))
     elif cell <= 9 and cell >= 7:
-        textRect.center = (((cell_width * ((cell - 1) % 3)) + (cell_width / 2)), (cell_height + cell_height + (cell_height / 2)))
+        if y_align == "center":
+            textRect.center = ((cell_width * ((cell - 1) % 3)) + (cell_width // 2)), (cell_height + cell_height + (cell_height // 2))
+        elif y_align == "top":
+            textRect.center = ((cell_width * ((cell - 1) % 3)) + (cell_width // 2)), (cell_height + cell_height + (cell_height // 3))
+        elif y_align == "bottom":
+            textRect.center = ((cell_width * ((cell - 1) % 3)) + (cell_width // 2)), (cell_height + cell_height + ((cell_height // 3) * 2))
     screen.blit(textSurf, textRect)
 
 def get_cell(cell):
@@ -163,6 +238,49 @@ def cell_button(text, cell, fc, fs, ac, ic, action=None):
     else:
         screen.fill(ic, rect=[bounds[0], bounds[2], cell_width, cell_height])
     message_to_screen(text, fc, cell, fs)
+
+def print_question(text, color, font, size):
+    qwrap = wrapline(text, font, display_width)
+    height = 0
+    for x in qwrap:
+        textSurf, textRect = text_objects(x, color, size)
+        textRect.center = (display_width // 2), ((display_height // 8) + height)
+        height += (textRect.bottom - textRect.top)
+        screen.blit(textSurf, textRect)
+
+def print_answer(index, cell, color, font, size):
+    choices = []
+    if myDict[index]['type'] == 'multiple':
+        if isShuffled[cell-1] == False:
+            order[cell] = [1, 2, 3, 4]
+            random.shuffle(order[cell])
+            isShuffled[cell-1] = True
+        choices.append([myDict[index]['correct_answer'], True])
+        choices.append([myDict[index]['incorrect_answers/0'], False])
+        choices.append([myDict[index]['incorrect_answers/1'], False])
+        choices.append([myDict[index]['incorrect_answers/2'], False])
+    if myDict[index]['type'] == 'boolean':
+        if isShuffled[cell-1] == False:
+            order[cell] = [1, 2]
+            isShuffled[cell-1] = True
+        choices.append([myDict[index]['correct_answer'], True])
+        choices.append([myDict[index]['incorrect_answers/0'], False])
+    answer_bound = []
+
+    for x,i in enumerate(order[cell]):
+        textSurf, textRect = text_objects(choices[i-1][0], color, size)
+        textRect.center = (((display_width // 2) * (x % 2)) + (display_width // 4)), ((display_height // 2) + ((display_height // 4) * (x // 2)))
+        if choices[i-1][1] == True:
+            correct = x + 1
+        answer_bound.append(textSurf.get_rect())
+        screen.blit(textSurf, textRect)
+    # print(choices)
+    # print(isShuffled)
+    # print(order)
+    return correct, answer_bound
+
+
+
 
 def MainMenu():
     # gameOver = False
@@ -231,6 +349,7 @@ def gamescreen():
     gameOver = False
     global ongoing, qindex, board_state, turn
     if ongoing == False:
+        initvalues()
         print(qindex)
         for i,q in enumerate(qindex):
             print(i,q)
@@ -252,14 +371,13 @@ def gamescreen():
         for key, cell in board_state.items():
             cell[0] = qindex[key-1]
         ongoing = True
-
     else:
         print(qindex)
         print(board_state)
         while not gameOver:
             current_pos = pygame.mouse.get_pos()
             current_cell = cell_pos(current_pos[0], current_pos[1])
-            print(current_cell)
+            # print(current_cell)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -268,7 +386,7 @@ def gamescreen():
                     if event.key == pygame.K_ESCAPE:
                         gameOver = True
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    question(qindex[current_cell-1])
+                    question(qindex[current_cell-1], current_cell)
 
             for key, cell in board_state.items():
                 if cell[1] == False:
@@ -278,7 +396,8 @@ def gamescreen():
                         screen.fill(bright_red, rect=[bounds[0], bounds[2], cell_width, cell_height])
                     else:
                         screen.fill(red, rect=[bounds[0], bounds[2], cell_width, cell_height])
-                    message_to_screen(myDict[qindex[key-1]]['difficulty'].capitalize(), white, key, "medium")
+                    message_to_screen(myDict[qindex[key - 1]]['category'].capitalize(), white, key, "smaller", "top")
+                    message_to_screen(myDict[qindex[key - 1]]['difficulty'].capitalize(), white, key, "medium", "bottom")
 
             pygame.display.update()
             clock.tick(FPS)
@@ -298,20 +417,31 @@ def gamescreen():
             # pygame.display.update()
             # clock.tick(FPS)
 
-def question(index):
+def question(index, cell):
     goBack = False
     global board_state, x_state, o_state
+    print(index)
     while not goBack:
         # print('nope')
+        current_pos = pygame.mouse.get_pos()
+        current_cell = cell_pos(current_pos[0], current_pos[1])
+        screen.fill(white)
+        print_question(myDict[index]['question'].capitalize(), black, medfont, "medium")
+        print_answer(index, cell, black, smallfont, "small")
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                     goBack = True
-        screen.fill(white)
-        message_to_screen(str(index), black, 5, size="large")
+                    goBack = True
+                # if event.key == pygame.K_SPACE:
+                #     countdown()
+
+            # elif event.type == pygame.MOUSEBUTTONDOWN:
+
+                # question(qindex[current_cell - 1], current_cell)
+
         pygame.display.update()
         clock.tick(FPS)
 
