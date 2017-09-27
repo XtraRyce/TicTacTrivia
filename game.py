@@ -1,9 +1,8 @@
 import pygame
 import csv
 import random
-import fileinput
 from itertools import chain
-import time
+
 
 anime = csv.DictReader(open('50animequestions.csv', encoding="utf8"))
 vg = csv.DictReader(open('50videogamequestions.csv', encoding="utf8"))
@@ -25,17 +24,12 @@ with open('dupecheck.txt') as file:
             line = [int(i) for i in line]
             dupecheck.extend(line)
 
-
-
 print(dupecheck)
 
 win_flavor = ("%s won the round!", "%s gets it!", "%s takes the cell!", "%s wins the round!", "Impressive win by %s!")
 lose_flavor = ("%s steals it!", "%s grabs this one away!", "Stolen by %s!", "Effortless round for %s!", "%s, now\'s your chance!")
 
-
 pygame.init()
-
-# go_back = False
 
 ongoing = False
 
@@ -59,7 +53,7 @@ screen = pygame.display.set_mode((display_width, display_height))
 pygame.display.set_caption('TicTacTrivia')
 
 clock = pygame.time.Clock()
-# smallfont = pygame.font.SysFont(None, 25)
+
 smallerfont = pygame.font.SysFont("tahoma", 18)
 smallfont = pygame.font.SysFont("tahoma", 25)
 medfont = pygame.font.SysFont("tahoma", 50)
@@ -147,8 +141,6 @@ def wrapline(text, font, maxwidth):
 
 
 def wrap_multi_line(text, font, maxwidth):
-    """ returns text taking new lines into account.
-    """
     lines = chain(*(wrapline(line, font, maxwidth) for line in text.splitlines()))
     return list(lines)
 
@@ -297,7 +289,6 @@ def countdown():
         pygame.display.flip()
         counter -= 1
         if counter < 0:
-            # clock.tick(1)
             loop = False
 
 def result(cell, correct=None):
@@ -371,7 +362,6 @@ def result(cell, correct=None):
 
 
 def MainMenu():
-    # gameOver = False
     gameExit = True
 
 
@@ -433,117 +423,76 @@ def gamescreen():
             cell[0] = qindex[key-1]
         ongoing = True
     else:
-        # print(qindex)
-        # print(board_state)
         print(win_conditions)
         print(turn)
         print(o_state)
         print(x_state)
         transition = False
         while not gameOver:
-            for cond in win_conditions:
-                if set(cond).issubset(o_state):
-                    screen.fill(white)
-                    print("O won!")
+            current_pos = pygame.mouse.get_pos()
+            current_cell = cell_pos(current_pos[0], current_pos[1])
+            screen.fill(white)
+            if turn % 2 == 0 and transition == False:
+                message_to_screen('O\'s Turn!', team_o, 0, "large")
+                pygame.display.flip()
+                clock.tick(1)
+                transition = True
+            elif turn % 2 == 1 and transition == False:
+                message_to_screen('X\'s Turn!', team_x, 0, "large")
+                pygame.display.flip()
+                clock.tick(1)
+                transition = True
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        MainMenu()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if board_state[current_cell][1] == False:
+                        question(qindex[current_cell-1], current_cell)
 
-                # if  cond < o_state and cond != o_state and not not o_state:
-                #     print("O won!")
-                #     # winner()
-                # elif cond < x_state and cond != x_state and not not x_state:
-                #     print("X won!")
-                #     # winner()
+            for key, cell in board_state.items():
+                if cell[1] == False:
+                    mouse = pygame.mouse.get_pos()
+                    bounds = get_cell(key)
+                    if bounds[1] >= mouse[0] >= bounds[0] and bounds[3] >= mouse[1] >= bounds[2]:
+                        screen.fill(bright_red, rect=[bounds[0], bounds[2], cell_width, cell_height])
+                    else:
+                        screen.fill(red, rect=[bounds[0], bounds[2], cell_width, cell_height])
+                    message_to_screen(myDict[qindex[key - 1]]['category'].capitalize(), white, key, "smaller", "top")
+                    message_to_screen(myDict[qindex[key - 1]]['difficulty'].capitalize(), white, key, "medium", "bottom")
                 else:
-                    current_pos = pygame.mouse.get_pos()
-                    current_cell = cell_pos(current_pos[0], current_pos[1])
-                    # print(current_cell)
-                    screen.fill(white)
-                    if turn % 2 == 0 and transition == False:
-                        message_to_screen('O\'s Turn!', team_o, 0, "large")
-                        pygame.display.flip()
-                        clock.tick(1)
-                        transition = True
-                    elif turn % 2 == 1 and transition == False:
-                        message_to_screen('X\'s Turn!', team_x, 0, "large")
-                        pygame.display.flip()
-                        clock.tick(1)
-                        transition = True
-                    for event in pygame.event.get():
-                        if event.type == pygame.QUIT:
-                            pygame.quit()
-                            quit()
-                        elif event.type == pygame.KEYDOWN:
-                            if event.key == pygame.K_ESCAPE:
-                                # gameOver = True
-                                MainMenu()
-                        elif event.type == pygame.MOUSEBUTTONDOWN:
-                            if board_state[current_cell][1] == False:
-                                question(qindex[current_cell-1], current_cell)
-
-                    for key, cell in board_state.items():
-                        if cell[1] == False:
-                            mouse = pygame.mouse.get_pos()
-                            bounds = get_cell(key)
-                            if bounds[1] >= mouse[0] >= bounds[0] and bounds[3] >= mouse[1] >= bounds[2]:
-                                screen.fill(bright_red, rect=[bounds[0], bounds[2], cell_width, cell_height])
-                            else:
-                                screen.fill(red, rect=[bounds[0], bounds[2], cell_width, cell_height])
-                            message_to_screen(myDict[qindex[key - 1]]['category'].capitalize(), white, key, "smaller", "top")
-                            message_to_screen(myDict[qindex[key - 1]]['difficulty'].capitalize(), white, key, "medium", "bottom")
-                        else:
-                            bounds = get_cell(key)
-                            if key in o_state:
-                                screen.fill(team_o, rect=[bounds[0], bounds[2], cell_width, cell_height])
-                                message_to_screen("O", black, key, "large")
-                            elif key in x_state:
-                                screen.fill(team_x, rect=[bounds[0], bounds[2], cell_width, cell_height])
-                                message_to_screen("X", black, key, "large")
-                    if turn % 2 == 0:
-                        textSurf, textRect = text_objects('O\'s Turn', team_o, "small")
-                        textRect.bottom = display_height
-                        screen.blit(textSurf, textRect)
-                        pygame.display.flip()
-                    elif turn % 2 == 1:
-                        textSurf, textRect = text_objects('X\'s Turn', team_x, "small")
-                        textRect.bottom = display_height
-                        textRect.right = display_width
-                        screen.blit(textSurf, textRect)
-                        pygame.display.flip()
-                    pygame.display.update()
-                    clock.tick(FPS)
-            # else:
-
-            # for i in range(1,10):
-
-            # for i in board_state:
-            #     if board_state[0] == False:
-            #         cell_button("?", i, black, "large", white, white, question)
-            #     else
-
-            # cell_button("Back to Main Menu", 7, black, "medium", bright_red, red, goback)
-            # if go_back == 1:
-            #     gameOver = True
-            #     go_back = 0
-            # pygame.display.update()
-            # clock.tick(FPS)
+                    bounds = get_cell(key)
+                    if key in o_state:
+                        screen.fill(team_o, rect=[bounds[0], bounds[2], cell_width, cell_height])
+                        message_to_screen("O", black, key, "large")
+                    elif key in x_state:
+                        screen.fill(team_x, rect=[bounds[0], bounds[2], cell_width, cell_height])
+                        message_to_screen("X", black, key, "large")
+            if turn % 2 == 0:
+                textSurf, textRect = text_objects('O\'s Turn', team_o, "small")
+                textRect.bottom = display_height
+                screen.blit(textSurf, textRect)
+                pygame.display.flip()
+            elif turn % 2 == 1:
+                textSurf, textRect = text_objects('X\'s Turn', team_x, "small")
+                textRect.bottom = display_height
+                textRect.right = display_width
+                screen.blit(textSurf, textRect)
+                pygame.display.flip()
+            pygame.display.update()
+            clock.tick(FPS)
 
 def question(index, cell):
     goBack = False
     global board_state, x_state, o_state
-    # print(index)
     while not goBack:
-        # print('nope')
         current_pos = pygame.mouse.get_pos()
         screen.fill(white)
         print_question(myDict[index]['question'].capitalize(), black, medfont, "medium")
         correct, ans_bounds= print_answer(index, cell, black, smallfont, "small", turn % 2 == 0)
-        # for x in ans_bounds:
-        #     if turn % 2 == 0:
-        #         if x.right >= current_pos[0] >= x.left and x.bottom >= current_pos[1] >= x.top:
-        #             screen.fill(team_o, x)
-        #     elif turn % 2 == 1:
-        #         if x.right >= current_pos[0] >= x.left and x.bottom >= current_pos[1] >= x.top:
-        #             screen.fill(team_x, x)
-        # print(correct)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -557,21 +506,10 @@ def question(index, cell):
                 for i,x in enumerate(ans_bounds):
                     if x.right >= current_pos[0] >= x.left and x.bottom >= current_pos[1] >= x.top:
                         if i == correct - 1:
-                            # print("you right")
                             result(cell, True)
                         else:
-                            # print("you wrong")
                             result(cell, False)
-
-                # question(qindex[current_cell - 1], current_cell)
-
         pygame.display.update()
         clock.tick(FPS)
-
-
-    # for i in board_state:
-    #     board_state[0] = random.randint(0,99
-    # screen.fill(white)
-    # cell_button("Yes", 4, black, "medium", white, white, )
 
 MainMenu()
