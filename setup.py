@@ -14,6 +14,18 @@ cx_Freeze.setup(
                           "include_files":["50animequestions.csv",
                                            "50videogamequestions.csv",
                                            "dupecheck.txt",
+                                           "asa.wav",
+                                           "bg.jpg",
+                                           "bgm.mp3",
+                                           "cmicon.ico",
+                                           "danger.jpg",
+                                           "frutiger.ttf",
+                                           "gotham.ttf",
+                                           "lol.wav",
+                                           "tbok.wav"
+                                           "tick.wav"
+                                           "uy.wav",
+                                           "win.wav",
                                            ]}},
     executables = executables
 )
